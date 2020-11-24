@@ -1,5 +1,7 @@
 -- Employees Queries  
 
+-- #1 Employees with their Salary and Hire date
+
 SELECT 
     emp.first_name, emp.last_name, sal.salary, emp.hire_date
 FROM
@@ -91,7 +93,7 @@ WHERE
     emp_sal.salary >= 100000
         AND CONCAT(emp.first_name, ' ', emp.last_name) REGEXP '^ber';
 
--- regexp basics --
+-- #8 Employees with their Title with first name starting with 'ari' and 'engineer' in title
 
 SELECT 
     emp.first_name, emp.last_name, emp_tit.title
@@ -103,7 +105,7 @@ WHERE
     emp.first_name LIKE 'ari_'
         AND emp_tit.title LIKE '%engineer%';
         
-- #9 Create View for Employees with their Salary
+-- #9 Create View for Employees with their Salary
 
 CREATE VIEW employee_sal AS 
 SELECT 
@@ -137,3 +139,25 @@ FROM
 WHERE
     salary > 90000
 ORDER BY first_name , last_name;
+
+-- #11 
+
+DROP PROCEDURE IF EXISTS spEmployeeDepartment;
+
+DELIMITER $$
+
+CREATE PROCEDURE spEmployeeDepartment()
+BEGIN 
+SELECT emp_dept.dept_no_id, CONCAT(emp.first_name," ",emp.last_name) AS full_name, dept.dept_name
+from employees AS emp 
+INNER JOIN
+employee_department AS emp_dept ON emp.emp_no = emp_dept.emp_no_id
+INNER JOIN 
+departments AS dept ON dept.dept_no = emp_dept.dept_no_id
+ORDER BY full_name
+LIMIT 5;
+END$$
+
+DELIMITER ;
+
+Call spEmployeeDepartment()
