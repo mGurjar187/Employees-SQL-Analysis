@@ -1,5 +1,7 @@
 -- Employees Queries  
 
+USE employees_db;
+
 -- #1 Employees with their Salary and Hire date
 
 SELECT 
@@ -107,11 +109,10 @@ WHERE
         
 -- #9 Create View for Employees with their Salary
 
+DROP VIEW IF EXISTS employee_sal;
+
 CREATE VIEW employee_sal AS 
-SELECT 
-    emp.first_name,
-    emp.last_name,
-    emp_sal.salary
+SELECT CONCAT(emp.first_name, " ",emp.last_name) AS full_name, emp_sal.salary
 FROM
     employees AS emp
         INNER JOIN
@@ -121,26 +122,26 @@ FROM
 -- #10 Employees with Categorised into Low, Medium and High by Salary
 
 SELECT 
-    first_name, last_name, salary, 'Low' AS Salary_Category
+    full_name, salary, 'Low' AS Salary_Category
 FROM
     employee_sal
 WHERE
     salary < 53000 
 UNION SELECT 
-    first_name, last_name, salary, 'Medium' AS Salary_Category
+    full_name, salary, 'Medium' AS Salary_Category
 FROM
     employee_sal
 WHERE
     salary BETWEEN 53000 AND 90000 
 UNION SELECT 
-    first_name, last_name, salary, 'High' AS Salary_Category
+    full_name, salary, 'High' AS Salary_Category
 FROM
     employee_sal
 WHERE
     salary > 90000
-ORDER BY first_name , last_name;
+ORDER BY full_name;
 
--- #11 
+-- #11 procedure EmployeeDepartment
 
 DROP PROCEDURE IF EXISTS spEmployeeDepartment;
 
@@ -148,16 +149,40 @@ DELIMITER $$
 
 CREATE PROCEDURE spEmployeeDepartment()
 BEGIN 
-SELECT emp_dept.dept_no_id, CONCAT(emp.first_name," ",emp.last_name) AS full_name, dept.dept_name
+SELECT CONCAT(emp.first_name," ",emp.last_name) AS full_name,
+dept.dept_name, DATE_FORMAT(emp.hire_date,'%d-%m-%Y') AS hire_date
 from employees AS emp 
 INNER JOIN
 employee_department AS emp_dept ON emp.emp_no = emp_dept.emp_no_id
 INNER JOIN 
 departments AS dept ON dept.dept_no = emp_dept.dept_no_id
-ORDER BY full_name
-LIMIT 5;
+ORDER BY full_name;
 END$$
 
 DELIMITER ;
 
 Call spEmployeeDepartment()
+
+-- #12 procedure CountEmployeesByTitle
+
+DROP PROCEDURE IF EXISTS spCountEmployeesByTitle;
+
+DELIMITER $$
+
+CREATE PROCEDURE spCountEmployeesByTitle(
+IN emp_title varchar(50),
+OUT total_employees INT)
+BEGIN
+SELECT COUNT(emp_no_id) INTO total_employees
+FROM employee_titles
+WHERE title = emp_title;
+END$$
+
+DELIMITER ;
+
+CALL spCountEmployeesByTitle('Staff', @total);
+
+SELECT @total AS total_employees;
+
+
+
