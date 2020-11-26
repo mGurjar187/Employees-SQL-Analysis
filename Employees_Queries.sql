@@ -161,7 +161,7 @@ END$$
 
 DELIMITER ;
 
-Call spEmployeeDepartment()
+Call spEmployeeDepartment();
 
 -- #12 procedure CountEmployeesByTitle
 
@@ -183,6 +183,34 @@ DELIMITER ;
 CALL spCountEmployeesByTitle('Staff', @total);
 
 SELECT @total AS total_employees;
+
+-- #13 function to grade employees based on their Salary
+
+DROP FUNCTION IF EXISTS EmployeeSalGrade;
+
+DELIMITER $$
+
+CREATE FUNCTION  EmployeeSalGrade ( salary INT) RETURNS varchar(20)
+DETERMINISTIC
+BEGIN
+	DECLARE grade VARCHAR(20);
+    IF salary >= 120000 THEN
+		SET grade = 'Grade I';
+	ELSEIF (salary >= 100000 AND salary < 120000) THEN
+		SET grade = 'Grade II';
+	ELSEIF (salary >= 70000 AND salary < 100000) THEN
+		SET grade = 'Grade III';
+	ELSEIF (salary >= 50000 AND salary < 70000) THEN
+		SET grade = 'Grade IV';
+	ELSE SET grade = 'Grade V';
+    END IF;
+    RETURN grade;
+END$$
+
+DELIMITER ;
+
+
+	
 
 
 
