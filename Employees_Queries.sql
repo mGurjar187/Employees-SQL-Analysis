@@ -111,13 +111,15 @@ WHERE
 
 DROP VIEW IF EXISTS employee_sal;
 
-CREATE VIEW employee_sal AS 
-SELECT CONCAT(emp.first_name, " ",emp.last_name) AS full_name, emp_sal.salary
-FROM
-    employees AS emp
-        INNER JOIN
-    employee_salaries AS emp_sal ON emp.emp_no = emp_sal.emp_no
-    ORDER BY first_name, last_name;
+CREATE VIEW employee_sal AS
+    SELECT 
+        CONCAT(emp.first_name, ' ', emp.last_name) AS full_name,
+        emp_sal.salary
+    FROM
+        employees AS emp
+            INNER JOIN
+        employee_salaries AS emp_sal ON emp.emp_no = emp_sal.emp_no
+    ORDER BY first_name , last_name;
 
 -- #10 Employees with Categorised into Low, Medium and High by Salary
 
@@ -208,9 +210,3 @@ BEGIN
 END$$
 
 DELIMITER ;
-
-
-	
-
-
-
