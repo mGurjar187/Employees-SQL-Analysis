@@ -192,7 +192,7 @@ DROP FUNCTION IF EXISTS EmployeeSalGrade;
 
 DELIMITER $$
 
-CREATE FUNCTION  EmployeeSalGrade ( salary INT) RETURNS varchar(20)
+CREATE FUNCTION  EmployeeSalGrade (salary INT) RETURNS varchar(20)
 DETERMINISTIC
 BEGIN
 	DECLARE grade VARCHAR(20);
@@ -207,6 +207,23 @@ BEGIN
 	ELSE SET grade = 'Grade V';
     END IF;
     RETURN grade;
+END$$
+
+DELIMITER ;
+
+-- #15 Function to calculate employees age
+
+DROP FUNCTION IF EXISTS CalculateAge;
+
+DELIMITER $$
+
+CREATE FUNCTION CalculateAge (DOB Date) RETURNS INT
+DETERMINISTIC
+BEGIN
+DECLARE Age INT;
+SET Age = DATE_FORMAT(NOW(), '%Y') - DATE_FORMAT(DOB, '%Y')
+ - (DATE_FORMAT(NOW(), '00-%m-%d') < DATE_FORMAT(DOB, '00-%m-%d'));
+RETURN Age;
 END$$
 
 DELIMITER ;
