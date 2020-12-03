@@ -10,8 +10,9 @@ birth_date DATE NOT NULL,
 first_name VARCHAR(50) NOT NULL,
 last_name VARCHAR(50) NOT NULL,
 gender CHAR(2) NOT NULL,
-hire_date DATE NOT NULL DEFAULT(CURRENT_DATE),
-PRIMARY KEY(emp_no));
+hire_date DATE NOT NULL DEFAULT(CURRENT_DATE));
+
+CREATE UNIQUE INDEX idx_emp_no ON Employees (emp_no ASC);
 
 LOAD DATA 
 INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employees.csv'
@@ -44,8 +45,7 @@ CREATE TABLE departments (
     PRIMARY KEY (dept_no)
 );
 
--- ALTER TABLE departments
--- MODIFY COLUMN dept_no VARCHAR(10) NOT NULL;
+CREATE UNIQUE INDEX idx_dept_name ON departments (dept_name ASC);
 
 LOAD DATA
 INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Departments.csv'
@@ -63,6 +63,8 @@ CREATE TABLE employee_salaries (
     FOREIGN KEY (emp_no)
         REFERENCES EMPLOYEES (emp_no)
 );
+
+CREATE INDEX idx_salary ON employee_salaries (salary ASC);
 
 LOAD DATA
 INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Salaries.csv'
@@ -102,6 +104,8 @@ CREATE TABLE department_managers (
         REFERENCES departments (dept_no)
 );
 
+CREATE INDEX idx_dept_no ON department_managers (dept_no ASC);
+ 
 LOAD DATA
 INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Department_managers.csv'
 INTO TABLE department_managers
